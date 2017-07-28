@@ -1,0 +1,6 @@
+= spring-cloud-turbine image:https://travis-ci.org/daggerok/spring-cloud-turbine.svg?branch=5.3.1-RC-0-plugins["Build Status", link="https://travis-ci.org/daggerok/spring-cloud-turbine"]
+
+This repo is contains example usage spring-cloud with hystrix turbine
+
+[source,bash]
+bash bradlew clean build

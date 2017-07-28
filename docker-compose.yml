@@ -1,0 +1,49 @@
+version: "2.1"
+services:
+  infrastructure-hystrix-dashboard:
+    #links: ["srv-db:db"]
+    #depends_on: [srv-db]
+    #environmentonment:
+    #  DB_HOST: db
+    #command: sh -c "mkdir -f /var/app # not needed with docker-compose"
+    image: openjdk:8u131-jre-alpine
+    ports: ["8080:8080"]
+    networks: [spring-cloud-turbine]
+    volumes:
+      - "infrastructure-hystrix-dashboard-data:/var/app"
+      - "./infrastructure/hystrix-dashboard/build/libs/hystrix-dashboard-0.0.1.jar:/var/app/app.jar:ro"
+    entrypoint: >
+      sh -c
+      "
+      java
+      -Xss228k -Xms128m -Xmx256m
+      -XX:MaxMetaspaceSize=128M
+      -XX:MaxDirectMemorySize=128M
+      -Dserver.tomcat.max-threads=1
+      -Djava.security.egd=file:/dev/./urandom
+      -jar /var/app/app.jar
+      "
+  modules-app1:
+    image: openjdk:8u131-jre-alpine
+    ports: ["8001:8001"]
+    networks: [spring-cloud-turbine]
+    volumes:
+      - "modules-app1-data:/var/app"
+      - "./modules/app1/build/libs/app1-0.0.1.jar:/var/app/app.jar:ro"
+    entrypoint: >
+      sh -c
+      "
+      java
+      -Xss228k -Xms128m -Xmx256m
+      -XX:MaxMetaspaceSize=128M
+      -XX:MaxDirectMemorySize=128M
+      -Dserver.tomcat.max-threads=1
+      -Djava.security.egd=file:/dev/./urandom
+      -jar /var/app/app.jar
+      "
+networks:
+  spring-cloud-turbine:
+    driver: bridge
+volumes:
+  infrastructure-hystrix-dashboard-data: {}
+  modules-app1-data: {}
