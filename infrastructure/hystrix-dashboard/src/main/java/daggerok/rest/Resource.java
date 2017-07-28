@@ -7,10 +7,10 @@ import java.util.Collections;
 import java.util.Map;
 
 @RestController
-public class App1Resource {
+public class Resource {
 
   @GetMapping
   public Map<String, Object> get() {
-    return Collections.singletonMap("message", "app1");
+    return Collections.singletonMap("message", "hystrix-dashboard");
   }
 }

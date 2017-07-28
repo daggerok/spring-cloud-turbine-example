@@ -26,6 +26,7 @@ allprojects {
 subprojects {
 
     if (project.subprojects.size() > 0) return
+    if (project.projectDir.path.contains('soapui')) return
 
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
@@ -79,6 +80,6 @@ dockerCompose {
     dockerComposeWorkingDirectory = "$rootDir"
 }
 
-task functionalTests
+task functionalTests(dependsOn: tasks.findAll {it.name.contains('loadtestrunner')})
 dockerCompose.isRequiredBy(functionalTests)
-composeUp.dependsOn assemble
+composeUp.dependsOn subprojects*.assemble

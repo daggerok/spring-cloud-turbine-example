@@ -1,0 +1,30 @@
+buildscript {
+    ext {
+        runnerVersion = '5.3.0-0'
+    }
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'http://smartbearsoftware.com/repository/maven2/' }
+    }
+    dependencies {
+        classpath "gradle.plugin.io.github.daggerok:soapui-runner:$runnerVersion"
+    }
+}
+
+subprojects { sp ->
+
+    def soapUIOutput = "$rootProject.buildDir/soapui"
+
+    apply plugin: 'io.github.daggerok.soapui-loadtestrunner'
+
+    loadtestrunner {
+        projectFile = sp.file('soapui-loadtest-project.xml').path
+        projectProperties = [
+                'host=localhost'
+        ]
+        systemProperties = [
+                "soapui.ext.libraries=$soapUIOutput/ext"
+        ]
+        outputFolder = "$soapUIOutput/$project.name"
+    }
+}

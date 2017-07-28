@@ -2,7 +2,7 @@ rootProject.name = 'spring-cloud-turbine'
 
 def ignores = file('.gitignore').readLines()
 
-['modules', 'infrastructure']
+['infrastructure', 'modules', 'tests']
         .collect({ file("$rootProject.projectDir/$it") })
         .each { parent ->
 
