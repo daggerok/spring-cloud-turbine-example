@@ -1,49 +1,41 @@
 version: "2.1"
 services:
-  infrastructure-hystrix-dashboard:
+  modules-app1:
     #links: ["srv-db:db"]
     #depends_on: [srv-db]
     #environmentonment:
     #  DB_HOST: db
     #command: sh -c "mkdir -f /var/app # not needed with docker-compose"
-    image: openjdk:8u131-jre-alpine
-    ports: ["8080:8080"]
-    networks: [spring-cloud-turbine]
-    volumes:
-      - "infrastructure-hystrix-dashboard-data:/var/app"
-      - "./infrastructure/hystrix-dashboard/build/libs/hystrix-dashboard-0.0.1.jar:/var/app/app.jar:ro"
-    entrypoint: >
-      sh -c
-      "
-      java
-      -Xss228k -Xms128m -Xmx256m
-      -XX:MaxMetaspaceSize=128M
-      -XX:MaxDirectMemorySize=128M
-      -Dserver.tomcat.max-threads=1
-      -Djava.security.egd=file:/dev/./urandom
-      -jar /var/app/app.jar
-      "
-  modules-app1:
-    image: openjdk:8u131-jre-alpine
+    extends:
+      file: ./docker/docker-compose-base.yml
+      service: microservice
     ports: ["8001:8001"]
     networks: [spring-cloud-turbine]
     volumes:
       - "modules-app1-data:/var/app"
       - "./modules/app1/build/libs/app1-0.0.1.jar:/var/app/app.jar:ro"
-    entrypoint: >
-      sh -c
-      "
-      java
-      -Xss228k -Xms128m -Xmx256m
-      -XX:MaxMetaspaceSize=128M
-      -XX:MaxDirectMemorySize=128M
-      -Dserver.tomcat.max-threads=1
-      -Djava.security.egd=file:/dev/./urandom
-      -jar /var/app/app.jar
-      "
+  infrastructure-hystrix-aggregator:
+    extends:
+      file: ./docker/docker-compose-base.yml
+      service: microservice
+    ports: ["8002:8002"]
+    networks: [spring-cloud-turbine]
+    volumes:
+      - "infrastructure-hystrix-aggregator-data:/var/app"
+      - "./infrastructure/hystrix-aggregator/build/libs/hystrix-aggregator-0.0.1.jar:/var/app/app.jar:ro"
+  infrastructure-hystrix-dashboard:
+    extends:
+      file: ./docker/docker-compose-base.yml
+      service: microservice
+    ports: ["8003:8003"]
+    networks: [spring-cloud-turbine]
+    volumes:
+      - "infrastructure-hystrix-dashboard-data:/var/app"
+      - "./infrastructure/hystrix-dashboard/build/libs/hystrix-dashboard-0.0.1.jar:/var/app/app.jar:ro"
 networks:
   spring-cloud-turbine:
     driver: bridge
 volumes:
+  infrastructure-hystrix-aggregator-data: {}
   infrastructure-hystrix-dashboard-data: {}
   modules-app1-data: {}
