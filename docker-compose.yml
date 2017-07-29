@@ -1,24 +1,35 @@
 version: "2.1"
 services:
-  modules-app1:
-    #links: ["srv-db:db"]
-    #depends_on: [srv-db]
-    #environmentonment:
-    #  DB_HOST: db
-    #command: sh -c "mkdir -f /var/app # not needed with docker-compose"
+  infrastructure-rabbitmq:
+    container_name: infrastructure-rabbitmq
+    image: healthcheck/rabbitmq:alpine
+    networks: [turbine-network]
+    ports: ["5672:5672"]
+    volumes: ["infrastructure-rabbitmq-data:/var/lib/rabbitmq"]
+  infrastructure-eureka-server:
+    container_name: infrastructure-eureka-server
+    depends_on: [infrastructure-rabbitmq]
+    environment:
+      SPRING_RABBITMQ_ADDRESSES: infrastructure-rabbitmq
     extends:
       file: ./compose/docker-compose-base.yml
       service: microservice
-    networks: [spring-cloud-turbine]
-    ports: ["8001:8001"]
+    networks: [turbine-network]
+    ports: ["8761:8761"]
     volumes:
-      - "modules-app1-data:/var/app"
-      - "./modules/app1/build/libs/app1-0.0.1.jar:/var/app/app.jar:ro"
+      - "infrastructure-eureka-server-data:/var/app"
+      - "./infrastructure/eureka-server/build/libs/eureka-server-0.0.1.jar:/var/app/app.jar:ro"
   infrastructure-hystrix-aggregator:
     extends:
       file: ./compose/docker-compose-base.yml
       service: microservice
-    networks: [spring-cloud-turbine]
+    depends_on:
+      - infrastructure-rabbitmq
+      - infrastructure-eureka-server
+    environment:
+      SPRING_RABBITMQ_ADDRESSES: infrastructure-rabbitmq
+      DISCOVERY_SERVICE_HOST: infrastructure-eureka-server
+    networks: [turbine-network]
     ports: ["8002:8002"]
     volumes:
       - "infrastructure-hystrix-aggregator-data:/var/app"
@@ -27,15 +38,40 @@ services:
     extends:
       file: ./compose/docker-compose-base.yml
       service: microservice
-    networks: [spring-cloud-turbine]
+    depends_on:
+      - infrastructure-rabbitmq
+      - infrastructure-eureka-server
+    environment:
+      SPRING_RABBITMQ_ADDRESSES: infrastructure-rabbitmq
+      DISCOVERY_SERVICE_HOST: infrastructure-eureka-server
+    networks: [turbine-network]
     ports: ["8003:8003"]
     volumes:
       - "infrastructure-hystrix-dashboard-data:/var/app"
       - "./infrastructure/hystrix-dashboard/build/libs/hystrix-dashboard-0.0.1.jar:/var/app/app.jar:ro"
+  modules-app1:
+    #links: ["srv-db:db"]
+    #command: sh -c "mkdir -f /var/app # not needed with docker-compose"
+    extends:
+      file: ./compose/docker-compose-base.yml
+      service: microservice
+    depends_on:
+      - infrastructure-rabbitmq
+      - infrastructure-eureka-server
+    environment:
+      SPRING_RABBITMQ_ADDRESSES: infrastructure-rabbitmq
+      DISCOVERY_SERVICE_HOST: infrastructure-eureka-server
+    networks: [turbine-network]
+    ports: ["8001:8001"]
+    volumes:
+      - "modules-app1-data:/var/app"
+      - "./modules/app1/build/libs/app1-0.0.1.jar:/var/app/app.jar:ro"
 networks:
-  spring-cloud-turbine:
+  turbine-network:
     driver: bridge
 volumes:
+  infrastructure-rabbitmq-data: {}
+  infrastructure-eureka-server-data: {}
   infrastructure-hystrix-aggregator-data: {}
   infrastructure-hystrix-dashboard-data: {}
   modules-app1-data: {}

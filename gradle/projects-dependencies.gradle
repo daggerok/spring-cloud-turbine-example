@@ -6,7 +6,15 @@ project(':infrastructure:hystrix-aggregator') {
 
 project(':infrastructure:hystrix-dashboard') {
   dependencies {
-    compile('org.springframework.cloud:spring-cloud-starter-hystrix-dashboard')
+    compile('com.netflix.turbine:turbine-core:0.5')
     compile('org.springframework.cloud:spring-cloud-starter-turbine')
+    compile('org.springframework.cloud:spring-cloud-starter-turbine-stream')
+    compile('org.springframework.cloud:spring-cloud-starter-hystrix-dashboard')
+  }
+}
+
+project(':infrastructure:eureka-server') {
+  dependencies {
+    compile('org.springframework.cloud:spring-cloud-starter-eureka-server')
   }
 }

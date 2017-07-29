@@ -1,2 +1,27 @@
+spring:
+  application:
+    name: hystrix-aggregator
+  rabbitmq:
+    addresses: ${RABBITMQ_HOST:localhost}
 server:
   port: 8002
+eureka:
+  environment: Staging
+  server:
+    registry-sync-retry-wait-ms: 1000
+    a-sgcache-expiry-timeout-ms: 20000
+    eviction-interval-timer-in-ms: 10000
+    peer-eureka-nodes-update-interval-ms: 3000
+    renewal-threshold-update-interval-ms: 60000
+  refresh.interval: 1
+  appInfo:
+    replace.interval: 1
+    initial.replace.time: 2
+  client:
+    healthcheck.enabled: true
+    serviceUrl.defaultZone: ${DISCOVERY_SERVICE_URL:http://${DISCOVERY_SERVICE_HOST:localhost}:${DISCOVERY_SERVICE_PORT:8761}/eureka/}
+    prefer-same-zone-eureka: true
+  instance:
+    preferIpAddress: true
+hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 60000
+logging.level.com.netflix.discovery: OFF

@@ -8,7 +8,7 @@ subprojects {
 
   if (project.projectDir.path.contains('tests')) {
 
-    def soapUIOutput = "$rootProject.buildDir/soapui/ext"
+    def soapUIOutput = "$rootProject.buildDir/soapui"
 
     apply plugin: 'io.github.daggerok.soapui-loadtestrunner'
 
@@ -30,11 +30,15 @@ subprojects {
   apply plugin: 'org.springframework.boot'
 
   dependencies {
+    compile('org.springframework.cloud:spring-cloud-starter-eureka')
     compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+    compile('org.springframework.cloud:spring-cloud-netflix-hystrix-stream')
+    compile('org.springframework.cloud:spring-cloud-starter-stream-rabbit')
     compile('org.springframework.boot:spring-boot-starter-actuator')
     compile('org.springframework.boot:spring-boot-starter-web')
     compileOnly('org.projectlombok:lombok')
     testCompile('org.springframework.boot:spring-boot-starter-test')
+    testCompile('org.springframework.cloud:spring-cloud-starter-eureka-server')
   }
 
   dependencyManagement {

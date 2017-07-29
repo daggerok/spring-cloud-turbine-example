@@ -1,3 +1,12 @@
+buildscript {
+  ext {
+    eurekaServer = 'infrastructure-eureka-server'
+    hystrixAggregator = 'infrastructure-hystrix-aggregator'
+    hystrixDashboard = 'infrastructure-hystrix-dashboard'
+    app1 = 'modules-app1'
+  }
+}
+
 // https://github.com/avast/docker-compose-gradle-plugin
 dockerCompose {
   // useComposeFiles = ['docker-compose.yml', 'docker-compose.prod.yml'] // like 'docker-compose -f <file>'
@@ -8,10 +17,17 @@ dockerCompose {
   removeImages = "Local" // Other accepted values are: "All" and "Local"
   removeOrphans = true // Removes containers for services not defined in the Compose file
   removeVolumes = true
-  // projectName = 'my-project' // allow to set custom docker-compose project name (defaults to directory name)
+  projectName = 'turbine' // allow to set custom docker-compose project name (defaults to directory name)
   // executable = '/path/to/docker-compose' // allow to set the path of the docker-compose executable (usefull if not present in PATH)
   // dockerExecutable = '/path/to/docker' // allow to set the path of the docker executable (usefull if not present in PATH)
   dockerComposeWorkingDirectory = "$rootDir"
+//  scale = [  // Pass docker compose --scale option like 'docker-compose up --scale serviceName1=5 --scale serviceName2=2'
+//      "$eurekaServer": 1,
+//      "$hystrixAggregator": 1,
+//      "$hystrixDashboard": 1,
+//      "$app1": 1,
+//  ]
+  waitForTcpPorts = true // true by default: wait until all containers will bootstrapped - useful if you need do some testing only after whole infrastructure will be ready
 }
 
 composeUp.dependsOn subprojects*.assemble

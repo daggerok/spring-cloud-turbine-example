@@ -9,7 +9,7 @@ import java.util.Map;
 @RestController
 public class Resource {
 
-  @GetMapping
+  @GetMapping("/")
   public Map<String, Object> get() {
     return Collections.singletonMap("message", "app1");
   }

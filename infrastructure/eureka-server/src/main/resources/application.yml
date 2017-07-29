@@ -1,11 +1,14 @@
 spring:
   application:
-    name: app1
+    name: eureka-server
   rabbitmq:
     addresses: ${RABBITMQ_HOST:localhost}
 server:
-  port: 8001
+  port: 8761
 eureka:
+  client:
+    register-with-eureka: false
+    fetch-registry: false
   environment: Staging
   server:
     registry-sync-retry-wait-ms: 1000
@@ -17,10 +20,6 @@ eureka:
   appInfo:
     replace.interval: 1
     initial.replace.time: 2
-  client:
-    healthcheck.enabled: true
-    serviceUrl.defaultZone: ${DISCOVERY_SERVICE_URL:http://${DISCOVERY_SERVICE_HOST:localhost}:${DISCOVERY_SERVICE_PORT:8761}/eureka/}
-    prefer-same-zone-eureka: true
   instance:
     preferIpAddress: true
 hystrix.command.default.execution.isolation.thread.timeoutInMilliseconds: 60000

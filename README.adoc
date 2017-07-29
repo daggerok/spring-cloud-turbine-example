@@ -1,5 +1,7 @@
 = spring-cloud-turbine example image:https://travis-ci.org/daggerok/spring-cloud-turbine-example.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/spring-cloud-turbine-example"]
 
+== in progress: turbine is not worked yet... ==
+
 This repo is contains example usage spring-cloud with hystrix turbine
 
 == bootstrap
@@ -15,12 +17,15 @@ http --stream :8001/hystrix.stream
 ----
 
 ==== hystrix dashboard
-[source,bash]
-http :8002/hystrix
+
+go to http://localhost:8002/hystrix
+and paste url pointing to http://localhost:8001/hystrix.stream
 
 ==== turbine dashboard
 [source,bash]
 http :8002/hystrix
+
+and replage
 
 == run tests
 ==== required docker / docker-compose
