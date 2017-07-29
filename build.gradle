@@ -2,6 +2,14 @@ buildscript {
     ext {
         springCloudVersion = 'Dalston.SR2'
         springBootVersion = '1.5.6.RELEASE'
+        runnerVersion = '5.3.0-2'
+    }
+    repositories {
+        maven { url 'https://plugins.gradle.org/m2/' }
+        maven { url 'http://smartbearsoftware.com/repository/maven2/' }
+    }
+    dependencies {
+        classpath "gradle.plugin.io.github.daggerok:soapui-runner:$runnerVersion"
     }
 }
 
@@ -26,7 +34,26 @@ allprojects {
 subprojects {
 
     if (project.subprojects.size() > 0) return
-    if (project.projectDir.path.contains('soapui')) return
+
+    if (project.projectDir.path.contains('tests')) {
+
+        def soapUIOutput = "$rootProject.buildDir/soapui/ext"
+
+        apply plugin: 'io.github.daggerok.soapui-loadtestrunner'
+
+        loadtestrunner {
+            projectFile = project.file('soapui-loadtest-project.xml').path
+            projectProperties = [
+                    'host=localhost'
+            ]
+            systemProperties = [
+                    "soapui.ext.libraries=$soapUIOutput/ext"
+            ]
+            outputFolder = "$soapUIOutput/$project.name"
+        }
+
+        return
+    }
 
     apply plugin: 'java'
     apply plugin: 'org.springframework.boot'
@@ -80,6 +107,10 @@ dockerCompose {
     dockerComposeWorkingDirectory = "$rootDir"
 }
 
-task functionalTests(dependsOn: tasks.findAll {it.name.contains('loadtestrunner')})
+Task[] testRunnerTasks =
+        subprojects*.tasks.collectMany({ it })
+                .findAll({ Task t -> t.path.contains('testrunner') || t.path.contains('extDir') })
+
+task functionalTests(dependsOn: testRunnerTasks)
 dockerCompose.isRequiredBy(functionalTests)
 composeUp.dependsOn subprojects*.assemble
