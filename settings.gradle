@@ -1,4 +1,4 @@
-rootProject.name = 'spring-cloud-turbine'
+rootProject.name = 'spring-cloud-turbine-example'
 
 def ignores = file('.gitignore').readLines()
 
