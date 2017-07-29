@@ -7,28 +7,28 @@ services:
     #  DB_HOST: db
     #command: sh -c "mkdir -f /var/app # not needed with docker-compose"
     extends:
-      file: ./docker/docker-compose-base.yml
+      file: ./compose/docker-compose-base.yml
       service: microservice
-    ports: ["8001:8001"]
     networks: [spring-cloud-turbine]
+    ports: ["8001:8001"]
     volumes:
       - "modules-app1-data:/var/app"
       - "./modules/app1/build/libs/app1-0.0.1.jar:/var/app/app.jar:ro"
   infrastructure-hystrix-aggregator:
     extends:
-      file: ./docker/docker-compose-base.yml
+      file: ./compose/docker-compose-base.yml
       service: microservice
-    ports: ["8002:8002"]
     networks: [spring-cloud-turbine]
+    ports: ["8002:8002"]
     volumes:
       - "infrastructure-hystrix-aggregator-data:/var/app"
       - "./infrastructure/hystrix-aggregator/build/libs/hystrix-aggregator-0.0.1.jar:/var/app/app.jar:ro"
   infrastructure-hystrix-dashboard:
     extends:
-      file: ./docker/docker-compose-base.yml
+      file: ./compose/docker-compose-base.yml
       service: microservice
-    ports: ["8003:8003"]
     networks: [spring-cloud-turbine]
+    ports: ["8003:8003"]
     volumes:
       - "infrastructure-hystrix-dashboard-data:/var/app"
       - "./infrastructure/hystrix-dashboard/build/libs/hystrix-dashboard-0.0.1.jar:/var/app/app.jar:ro"

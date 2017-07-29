@@ -2,6 +2,27 @@
 
 This repo is contains example usage spring-cloud with hystrix turbine
 
+== bootstrap
+==== run apps
 [source,bash]
-# required docker / docker-compose
+bash gradlew composeUp
+
+==== worker app1
+[source,bash]
+----
+http :8001
+http --stream :8001/hystrix.stream
+----
+
+==== hystrix dashboard
+[source,bash]
+http :8002/hystrix
+
+==== turbine dashboard
+[source,bash]
+http :8002/hystrix
+
+== run tests
+==== required docker / docker-compose
+[source,bash]
 bash gradlew clean functionalTests

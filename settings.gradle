@@ -3,11 +3,11 @@ rootProject.name = 'spring-cloud-turbine-example'
 def ignores = file('.gitignore').readLines()
 
 ['infrastructure', 'modules', 'tests']
-        .collect({ file("$rootProject.projectDir/$it") })
-        .each { parent ->
+    .collect({ file("$rootProject.projectDir/$it") })
+    .each { parent ->
 
-    parent.listFiles()
-            .findAll({ it.isDirectory() })
-            .findAll({ !ignores.contains(it.name) })
-            .each { include ":$parent.name:$it.name" }
+  parent.listFiles()
+      .findAll({ it.isDirectory() })
+      .findAll({ !ignores.contains(it.name) })
+      .each { include ":$parent.name:$it.name" }
 }
