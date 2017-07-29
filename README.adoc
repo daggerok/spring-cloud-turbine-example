@@ -1,4 +1,4 @@
-= spring-cloud-turbine image:https://travis-ci.org/daggerok/spring-cloud-turbine.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/spring-cloud-turbine"]
+= spring-cloud-turbine example image:https://travis-ci.org/daggerok/spring-cloud-turbine-example.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/spring-cloud-turbine-example"]
 
 This repo is contains example usage spring-cloud with hystrix turbine
 
