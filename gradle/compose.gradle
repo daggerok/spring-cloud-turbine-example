@@ -1,0 +1,17 @@
+// https://github.com/avast/docker-compose-gradle-plugin
+dockerCompose {
+  // useComposeFiles = ['docker-compose.yml', 'docker-compose.prod.yml'] // like 'docker-compose -f <file>'
+  captureContainersOutput = true // prints output of all containers to Gradle output - very useful for debugging
+  captureContainersOutputToFile = "$rootProject.buildDir/docker-compose" // sends output of all containers to a log file
+  stopContainers = true // doesn't call `docker-compose down` - useful for debugging
+  removeContainers = true
+  removeImages = "Local" // Other accepted values are: "All" and "Local"
+  removeOrphans = true // Removes containers for services not defined in the Compose file
+  removeVolumes = true
+  // projectName = 'my-project' // allow to set custom docker-compose project name (defaults to directory name)
+  // executable = '/path/to/docker-compose' // allow to set the path of the docker-compose executable (usefull if not present in PATH)
+  // dockerExecutable = '/path/to/docker' // allow to set the path of the docker executable (usefull if not present in PATH)
+  dockerComposeWorkingDirectory = "$rootDir"
+}
+
+composeUp.dependsOn subprojects*.assemble

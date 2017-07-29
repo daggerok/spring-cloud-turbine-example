@@ -1,0 +1,6 @@
+Task[] testRunnerTasks =
+    subprojects*.tasks.collectMany { it }
+        .findAll { Task task -> task.path.contains('testrunner') || task.path.contains('extDir') }
+
+task functionalTests(dependsOn: testRunnerTasks)
+dockerCompose.isRequiredBy(functionalTests)

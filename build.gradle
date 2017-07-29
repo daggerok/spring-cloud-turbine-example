@@ -1,9 +1,4 @@
 buildscript {
-  ext {
-    springCloudVersion = 'Dalston.SR2'
-    springBootVersion = '1.5.6.RELEASE'
-    runnerVersion = '5.3.0-2'
-  }
   repositories {
     maven { url 'https://plugins.gradle.org/m2/' }
     maven { url 'http://smartbearsoftware.com/repository/maven2/' }
@@ -17,99 +12,9 @@ plugins {
   id 'io.github.daggerok.soapui-loadtestrunner' version '5.3.0-2' apply false
 }
 
-allprojects {
-
-  apply plugin: 'base'
-
-  version = '0.0.1'
-  repositories { mavenCentral() }
-
-  clean {
-    delete "$projectDir/out", "$projectDir/build"
-  }
-}
-
-subprojects {
-
-  if (project.subprojects.size() > 0) return
-
-  if (project.projectDir.path.contains('tests')) {
-
-    def soapUIOutput = "$rootProject.buildDir/soapui/ext"
-
-    apply plugin: 'io.github.daggerok.soapui-loadtestrunner'
-
-    loadtestrunner {
-      projectFile = project.file('soapui-loadtest-project.xml').path
-      projectProperties = [
-          'host=localhost'
-      ]
-      systemProperties = [
-          "soapui.ext.libraries=$soapUIOutput/ext"
-      ]
-      outputFolder = "$soapUIOutput/$project.name"
-    }
-
-    return
-  }
-
-  apply plugin: 'java'
-  apply plugin: 'org.springframework.boot'
-
-  dependencies {
-    compile('org.springframework.cloud:spring-cloud-starter-hystrix')
-    compile('org.springframework.boot:spring-boot-starter-actuator')
-    compile('org.springframework.boot:spring-boot-starter-web')
-    compileOnly('org.projectlombok:lombok')
-    testCompile('org.springframework.boot:spring-boot-starter-test')
-  }
-
-  dependencyManagement {
-    imports {
-      mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
-    }
-  }
-
-  springBoot.mainClass = 'daggerok.Main'
-}
-
-project(':infrastructure:hystrix-aggregator') {
-  dependencies {
-    compile('org.springframework.cloud:spring-cloud-starter-hystrix-dashboard')
-  }
-}
-
-project(':infrastructure:hystrix-dashboard') {
-  dependencies {
-    compile('org.springframework.cloud:spring-cloud-starter-hystrix-dashboard')
-    compile('org.springframework.cloud:spring-cloud-starter-turbine')
-  }
-}
-
-wrapper {
-  gradleVersion = '4.0.2'
-}
-
-// https://github.com/avast/docker-compose-gradle-plugin
-dockerCompose {
-  // useComposeFiles = ['docker-compose.yml', 'docker-compose.prod.yml'] // like 'docker-compose -f <file>'
-  captureContainersOutput = true // prints output of all containers to Gradle output - very useful for debugging
-  captureContainersOutputToFile = "$rootProject.buildDir/docker-compose" // sends output of all containers to a log file
-  stopContainers = true // doesn't call `docker-compose down` - useful for debugging
-  removeContainers = true
-  removeImages = "Local" // Other accepted values are: "All" and "Local"
-  removeOrphans = true // Removes containers for services not defined in the Compose file
-  removeVolumes = true
-  // projectName = 'my-project' // allow to set custom docker-compose project name (defaults to directory name)
-  // executable = '/path/to/docker-compose' // allow to set the path of the docker-compose executable (usefull if not present in PATH)
-  // dockerExecutable = '/path/to/docker' // allow to set the path of the docker executable (usefull if not present in PATH)
-  dockerComposeWorkingDirectory = "$rootDir"
-}
-
-Task[] testRunnerTasks =
-    subprojects*.tasks.collectMany { it }
-        .findAll { Task task -> task.path.contains('testrunner') || task.path.contains('extDir') }
-
-task functionalTests(dependsOn: testRunnerTasks)
-dockerCompose.isRequiredBy(functionalTests)
-composeUp.dependsOn subprojects*.assemble
+apply from: "$rootDir/gradle/allprojects.gradle"
+apply from: "$rootDir/gradle/subprojects.gradle"
+apply from: "$rootDir/gradle/projects-dependencies.gradle"
+apply from: "$rootDir/gradle/compose.gradle"
+apply from: "$rootDir/gradle/functionalTests.gradle"
+apply from: "$rootDir/gradle/wrapper.gradle"

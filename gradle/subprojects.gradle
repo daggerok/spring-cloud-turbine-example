@@ -1,0 +1,47 @@
+ext {
+  springCloudVersion = 'Dalston.SR2'
+}
+
+subprojects {
+
+  if (project.subprojects.size() > 0) return
+
+  if (project.projectDir.path.contains('tests')) {
+
+    def soapUIOutput = "$rootProject.buildDir/soapui/ext"
+
+    apply plugin: 'io.github.daggerok.soapui-loadtestrunner'
+
+    loadtestrunner {
+      projectFile = project.file('soapui-loadtest-project.xml').path
+      projectProperties = [
+          'host=localhost'
+      ]
+      systemProperties = [
+          "soapui.ext.libraries=$soapUIOutput/ext"
+      ]
+      outputFolder = "$soapUIOutput/$project.name"
+    }
+
+    return
+  }
+
+  apply plugin: 'java'
+  apply plugin: 'org.springframework.boot'
+
+  dependencies {
+    compile('org.springframework.cloud:spring-cloud-starter-hystrix')
+    compile('org.springframework.boot:spring-boot-starter-actuator')
+    compile('org.springframework.boot:spring-boot-starter-web')
+    compileOnly('org.projectlombok:lombok')
+    testCompile('org.springframework.boot:spring-boot-starter-test')
+  }
+
+  dependencyManagement {
+    imports {
+      mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
+    }
+  }
+
+  springBoot.mainClass = 'daggerok.Main'
+}

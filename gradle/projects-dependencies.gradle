@@ -1,0 +1,12 @@
+project(':infrastructure:hystrix-aggregator') {
+  dependencies {
+    compile('org.springframework.cloud:spring-cloud-starter-hystrix-dashboard')
+  }
+}
+
+project(':infrastructure:hystrix-dashboard') {
+  dependencies {
+    compile('org.springframework.cloud:spring-cloud-starter-hystrix-dashboard')
+    compile('org.springframework.cloud:spring-cloud-starter-turbine')
+  }
+}

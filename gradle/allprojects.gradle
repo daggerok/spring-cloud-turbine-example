@@ -1,0 +1,11 @@
+allprojects {
+
+  apply plugin: 'base'
+
+  version = '0.0.1'
+  repositories { mavenCentral() }
+
+  clean {
+    delete "$projectDir/out", "$projectDir/build"
+  }
+}
