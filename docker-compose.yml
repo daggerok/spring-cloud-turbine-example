@@ -41,6 +41,7 @@ services:
     depends_on:
       - infrastructure-rabbitmq
       - infrastructure-eureka-server
+      - infrastructure-hystrix-aggregator
     environment:
       SPRING_RABBITMQ_ADDRESSES: infrastructure-rabbitmq
       DISCOVERY_SERVICE_HOST: infrastructure-eureka-server
@@ -72,6 +73,6 @@ networks:
 volumes:
   infrastructure-rabbitmq-data: {}
   infrastructure-eureka-server-data: {}
-  infrastructure-hystrix-aggregator-data: {}
   infrastructure-hystrix-dashboard-data: {}
+  infrastructure-hystrix-aggregator-data: {}
   modules-app1-data: {}

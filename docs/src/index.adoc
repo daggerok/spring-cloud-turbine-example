@@ -1,0 +1,31 @@
+= Spring Cloud Turbine Example
+Maksim Kostromin <daggerok@gmail.com>
+2017-08-06
+:toc:
+:revnumber: {project-version}
+:example-caption!:
+ifndef::sourcedir[:sourcedir: ../..]
+:icons: font
+:toc: left
+:numbered:
+:github_url: https://github.com/daggerok/spring-cloud-turbine-example
+:github_project_path: {github_url}/tree/master
+:github_fork_badge: https://s3.amazonaws.com/github/ribbons/forkme_right_red_aa0000.png
+
+[discrete]
+== Introduction
+
+This is a user manual for an spring-cloud-turbine-example.
+
+== Debug info
+
+.Built-in
+asciidoctor-version:: {asciidoctor-version}
+safe-mode-name:: {safe-mode-name}
+docdir:: {docdir}
+docfile:: {docfile}
+
+.Custom
+project-version:: {project-version}
+sourcedir:: {sourcedir}
+endpoint-url:: {endpoint-url}

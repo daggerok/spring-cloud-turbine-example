@@ -11,13 +11,14 @@ before_install:
   # kill pg port 5432
   - true | sudo kill $(sudo lsof -t -i:5432)
 script:
-  - bash gradlew clean assemble build
-  - bash gradlew clean functionalTests
+  # auto
+  - bash gradlew clean assemble asciidoctor functionalTests
   # manual
   - bash gradlew composeUp
   - bash gradlew loadtestrunner --parallel
   - bash gradlew composeDown
 after_script:
+  - bash gradlew dependencyUpdates -Drevision=release
   - bash gradlew --stop
 cache:
   directories:

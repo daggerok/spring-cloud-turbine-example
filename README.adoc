@@ -1,8 +1,9 @@
 = spring-cloud-turbine example image:https://travis-ci.org/daggerok/spring-cloud-turbine-example.svg?branch=master["Build Status", link="https://travis-ci.org/daggerok/spring-cloud-turbine-example"]
 
-== turbine is not worked yet... ==
+== in progress...
 
-right now not interested, but link:https://dzone.com/articles/spring-cloud-with-turbine[here is something for reading..]
+link:https://github.com/MrBW/resilient-transport-service[here] example
+and link:https://dzone.com/articles/spring-cloud-with-turbine[here] is something for read
 
 This repo should contains example usage spring-cloud with hystrix turbine..
 

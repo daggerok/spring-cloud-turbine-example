@@ -1,5 +1,6 @@
 ext {
   springCloudVersion = 'Dalston.SR2'
+  springBootVersion = '1.4.3.RELEASE'
 }
 
 subprojects {
@@ -27,9 +28,13 @@ subprojects {
   }
 
   apply plugin: 'java'
+
+  if (project.projectDir.path.contains('docs')) return
+
   apply plugin: 'org.springframework.boot'
 
   dependencies {
+    compile('org.springframework.cloud:spring-cloud-starter')
     compile('org.springframework.cloud:spring-cloud-starter-eureka')
     compile('org.springframework.cloud:spring-cloud-starter-hystrix')
     compile('org.springframework.cloud:spring-cloud-netflix-hystrix-stream')
@@ -43,6 +48,7 @@ subprojects {
 
   dependencyManagement {
     imports {
+      mavenBom "org.springframework.boot:spring-boot-starter-parent:$springBootVersion"
       mavenBom "org.springframework.cloud:spring-cloud-dependencies:$springCloudVersion"
     }
   }

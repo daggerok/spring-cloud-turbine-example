@@ -19,7 +19,7 @@ eureka:
     initial.replace.time: 2
   client:
     healthcheck.enabled: true
-    serviceUrl.defaultZone: ${DISCOVERY_SERVICE_URL:http://${DISCOVERY_SERVICE_HOST:localhost}:${DISCOVERY_SERVICE_PORT:8761}/eureka/}
+    serviceUrl.defaultZone: ${DISCOVERY_SERVICE_URL:http://${DISCOVERY_SERVICE_HOST:0.0.0.0}:${DISCOVERY_SERVICE_PORT:8761}/eureka/}
     prefer-same-zone-eureka: true
   instance:
     preferIpAddress: true
